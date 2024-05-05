@@ -1,0 +1,47 @@
+#show__popup {
+    display: none;
+    padding: 0.5rem;
+    position: relative;
+    z-index: 9999;
+    background: white;
+    transform: translateY(-20rem);
+    margin: 0 auto 0 auto;
+    border: 0.1rem solid #000000;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.flex {
+    display: flex;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.space-x-5 {
+    margin-right: 2rem;
+}
+
+.justify-end {
+    justify-content: end;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.text-center {
+    text-align: center;
+}
