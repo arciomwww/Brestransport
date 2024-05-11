@@ -35,7 +35,11 @@ async function initMap() {
         .catch(error => {
             console.error('Error fetching data:', error);
         });
+    var menuDiv = document.createElement('div');
+    var menu = new CustomMenu(menuDiv, map);
 
+    menuDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(menuDiv);
 
 }
 
@@ -67,7 +71,65 @@ function saveData(title) {
         }).catch(error => console.error('Error saving data:', error));
 }
 
+function CustomMenu(controlDiv, map) {
+    var exportButton = document.createElement('button');
+    exportButton.innerHTML = 'Экспортировать в CSV';
+    controlDiv.appendChild(exportButton);
 
+    var importButton = document.createElement('button');
+    importButton.innerHTML = 'Импортировать из CSV';
+    controlDiv.appendChild(importButton);
+
+    var infoButton = document.createElement('button');
+    infoButton.innerHTML = 'Инструкции';
+    controlDiv.appendChild(infoButton);
+
+    exportButton.addEventListener('click', function() {
+        var instructions = "Export csv";
+        var instructionContainer = document.createElement('div');
+        instructionContainer.id = 'exportContainer';
+        var heading = document.createElement('h2');
+        heading.innerHTML = 'Export csv';
+        instructionContainer.appendChild(heading);
+        instructionContainer.innerHTML = '<input type="file">';
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
+    });
+
+    importButton.addEventListener('click', function() {
+        var instructions = "Import csv";
+        var instructionContainer = document.createElement('div');
+        instructionContainer.id = 'importContainer';
+        var heading = document.createElement('h2');
+        heading.innerHTML = 'Import csv';
+        instructionContainer.appendChild(heading);
+        instructionContainer.innerHTML = '<input type="file">';
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
+    });
+
+    infoButton.addEventListener('click', function() {
+        var instructions = "Здесь напишите ваши инструкции.";
+
+        var instructionContainer = document.createElement('div');
+        instructionContainer.id = 'instructionContainer';
+
+        var heading = document.createElement('h2');
+        heading.innerHTML = 'Инструкции';
+        instructionContainer.appendChild(heading);
+
+        var instructionText = document.createElement('p');
+        instructionText.innerHTML = instructions;
+        instructionContainer.appendChild(instructionText);
+
+        var closeButton = document.createElement('button');
+        closeButton.innerHTML = 'Закрыть';
+        closeButton.addEventListener('click', function() {
+            instructionContainer.parentNode.removeChild(instructionContainer);
+        });
+        instructionContainer.appendChild(closeButton);
+
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
+    });
+}
 function showData(title) {
     fetch(`http://localhost:8876/api/users/show`, {
         method: 'POST',

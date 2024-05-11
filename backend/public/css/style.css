@@ -45,3 +45,55 @@
 .text-center {
     text-align: center;
 }
+
+#instructionContainer {
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+#instructionContainer h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+#instructionContainer p {
+    margin-bottom: 10px;
+}
+
+#instructionContainer button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#instructionContainer button:hover {
+    background-color: #0056b3;
+}
+
+#importContainer {
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+#exportContainer {
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+}
