@@ -22,7 +22,7 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
 
     public function findByTitle(string $title): Collection
     {
-        return  $this->startConditions()
+        return $this->startConditions()
             ->select([
                 'id',
                 'full_name',
@@ -39,5 +39,23 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
         return $this->startConditions()
             ->find($id)
             ?->delete();
+    }
+
+    public function insert(array $data): bool
+    {
+        return $this->startConditions()
+            ->insert($data);
+    }
+
+    public function getAllForExcel(): Collection
+    {
+        return $this->startConditions()
+            ->select([
+                'title',
+                'full_name',
+                'phone_number',
+                'email',
+                'password',
+            ])->get();
     }
 }

@@ -85,14 +85,7 @@ function CustomMenu(controlDiv, map) {
     controlDiv.appendChild(infoButton);
 
     exportButton.addEventListener('click', function() {
-        var instructions = "Export csv";
-        var instructionContainer = document.createElement('div');
-        instructionContainer.id = 'exportContainer';
-        var heading = document.createElement('h2');
-        heading.innerHTML = 'Export csv';
-        instructionContainer.appendChild(heading);
-        instructionContainer.innerHTML = '<input type="file">';
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
+        exportUsersByCSV();
     });
 
     importButton.addEventListener('click', function() {
@@ -102,7 +95,10 @@ function CustomMenu(controlDiv, map) {
         var heading = document.createElement('h2');
         heading.innerHTML = 'Import csv';
         instructionContainer.appendChild(heading);
-        instructionContainer.innerHTML = '<input type="file">';
+        instructionContainer.innerHTML = `
+            <input type="file" id="import__input">
+            <button onclick="importUsersByCSV()">Импортировать</button>
+        `;
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
     });
 
@@ -221,6 +217,55 @@ const deleteUser = (id, title) => {
             showData(title);
         })
         .catch(error => console.error('Error loading data:', error));
+}
+
+const importUsersByCSV = () => {
+    let fileInput = document.getElementById('import__input');
+
+    if (fileInput.files.length === 0) {
+        console.error('Файл не выбран');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const form = new FormData();
+    form.append('file', file);
+    console.log(form);
+    fetch('http://localhost:8876/api/users/import', {
+        method: 'POST',
+        body: form,
+    }).then(response => {
+        console.log(response);
+    }).catch(error => {
+        console.log(error);
+    })
+}
+
+const exportUsersByCSV = () => {
+    fetch('http://localhost:8876/api/users/export', {
+        method: 'POST',
+    }).then(response => {
+        if (response.ok) {
+            return response.blob();
+        }
+        throw new Error('Network response was not ok');
+    }).then(blob => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'users.csv');
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.parentNode.removeChild(link);
+
+    }).catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
 }
 
 
