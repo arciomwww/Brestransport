@@ -7,6 +7,7 @@ use App\Contracts\Services\ExcelServiceContract;
 use League\Csv\ByteSequence;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
+use League\Csv\Reader;
 use League\Csv\Writer;
 use SplTempFileObject;
 
@@ -20,19 +21,18 @@ readonly class ExcelService implements ExcelServiceContract
 
     public function importUsersByCSV(array $data): void
     {
-        $handle = fopen($data['file']->getPathname(), 'r');
+        $csv = Reader::createFromPath($data['file']->getPathname(), 'r');
+
         $users = [];
-        while (($data = fgetcsv($handle, 1000)) !== false) {
+        foreach ($csv as $record) {
             $users[] = [
-                'title' => $data[0],
-                'full_name' => $data[1],
-                'phone_number' => $data[2],
-                'email' => $data[3],
-                'password' => $data[4],
+                'title' => $record[0],
+                'full_name' => $record[1],
+                'phone_number' => $record[2],
+                'email' => $record[3],
+                'password' => $record[4],
             ];
         }
-
-        fclose($handle);
 
         $this->userRepository->insert($users);
     }
@@ -52,8 +52,6 @@ readonly class ExcelService implements ExcelServiceContract
         foreach ($users as $user) {
             $csv->insertOne($user->toArray());
         }
-
-        $csv->output('users.csv');
 
         return $csv;
     }
