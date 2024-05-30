@@ -6,8 +6,9 @@ async function initMap() {
     });
     const image = "https://www.google.by/maps/vt/icon/name=assets/icons/transit/quantum_v2/bus-0-tiny.png&scale=2"
 
-    fetch('./js/data.json')
-        .then(response => response.json())
+    fetch('http://localhost:8876/api/bus-stops', {
+        method: 'GET'
+    }).then(response => response.json())
         .then(stopsData => {
             console.log(stopsData);
             stopsData.forEach(markerData => {
@@ -18,13 +19,14 @@ async function initMap() {
                     icon: image
                 });
                 const infoWindow = new google.maps.InfoWindow({
-                    content: '<div><strong>' + markerData.title +
-                        '</strong><br><label for="fullName">ФИО:</label><br><input type="text" id="fullName">' +
+                    content: '<div><strong>Текущая: ' + markerData.title + '</strong>' +
+                        '<br><strong>Следующая: ' + markerData.next + '</strong>' +
+                        '<br><label for="fullName">ФИО:</label><br><input type="text" id="fullName">' +
                         '<br><label for="phoneNumber">Номер телефона:</label><br><input type="text" id="phoneNumber">' +
                         '<br><label for="email">Логин:</label><br><input type="text" id="email">' +
                         '<br><label for="password">Пароль:</label><br><input type="text" id="password">' +
-                        `<br><br><button onclick="saveData('${markerData.title}')">Сохранить</button></div>` +
-                        `<br><button onclick="showData('${markerData.title}')">Просмотр</button></div>`
+                        `<br><br><button onclick="saveData('${markerData.id}')">Сохранить</button></div>` +
+                        `<br><button onclick="showData('${markerData.id}')">Просмотр</button></div>`
                 });
                 marker.addListener('click', () => {
                     infoWindow.open(map, marker);
@@ -43,7 +45,7 @@ async function initMap() {
 
 }
 
-function saveData(title) {
+function saveData(id) {
     const fullName = document.getElementById('fullName').value;
     const phoneNumber = document.getElementById('phoneNumber').value;
     const email = document.getElementById('email').value;
@@ -55,7 +57,7 @@ function saveData(title) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            title: title,
+            bus_stop_id: id,
             full_name: fullName,
             phone_number: phoneNumber,
             email: email,
@@ -89,21 +91,70 @@ function CustomMenu(controlDiv, map) {
     });
 
     importButton.addEventListener('click', function() {
-        var instructions = "Import csv";
-        var instructionContainer = document.createElement('div');
+        const instructions = "Import csv";
+        const instructionContainer = document.createElement('div');
         instructionContainer.id = 'importContainer';
-        var heading = document.createElement('h2');
+        instructionContainer.style.display = 'flex';
+        instructionContainer.style.flexDirection = 'column'
+        const heading = document.createElement('h2');
         heading.innerHTML = 'Import csv';
         instructionContainer.appendChild(heading);
         instructionContainer.innerHTML = `
-            <input type="file" id="import__input">
-            <button onclick="importUsersByCSV()">Импортировать</button>
+            <input class="space-y-2" type="file" id="import__input">
+            <button class="space-y-4" onclick="importUsersByCSV()">Импортировать</button>
+            <button class="bg-blue white border-0 hover:bg-blue-black-50 ease-in-out-2 cursor-pointer"
+            style="width: 8rem; height: 2rem"
+            onclick="closeContainer('importContainer')"
+            >Закрыть</button>
         `;
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
+
+
     });
 
     infoButton.addEventListener('click', function() {
-        var instructions = "Здесь напишите ваши инструкции.";
+        const instructions = `Шаг 1: Выбор остановки на карте
+    <br>
+    1. Вы перешли на страницу веб-приложения "БресТранспорт".
+    <br>
+    2. На карте Google API выберите нужную остановку городского транспорта, кликнув по ней левой кнопкой мыши.
+    <br>
+    Шаг 2: Ввод данных о пассажире
+    <br>
+    1. После выбора остановки появится окно с полями для ввода данных о фиксаторе.
+    <br>
+    2. Введите следующие данные:
+        <br>
+        - ФИО: Введите полное имя с заглавной буквы, например, "Иванов Иван Иванович".
+        <br>
+        - Номер телефона: Начните с "+375", затем введите код оператора и номер в формате ***--.
+        <br>
+        - Логин: Введите адрес электронной почты в формате ivanon021@gmail.com.
+        <br>
+        - Пароль: Введите пароль, содержащий минимум 8 символов, по крайней мере одну заглавную букву и цифры.
+    <br>
+    Шаг 3: Сохранение данных
+    <br>
+    1. После заполнения всех полей нажмите кнопку "Сохранить", чтобы сохранить данные о фиксаторе.
+    <br>
+    Шаг 4: Просмотр сохраненных данных. После сохранения данных у вас есть возможность просмотреть информацию о фиксаторах на данной остановке.
+    <br>
+    1. Для этого нажмите кнопку "Просмотр".
+    <br>
+    2. Вы увидите список сохраненных пассажиров со всей введенной информацией.
+    <br>
+    Шаг 5: Экспортирование. После сохранения данных у вас есть возможность экспортировать информацию о фиксаторах на всех остановках.
+    <br>
+    1. Для этого нажмите кнопку "Экспортировать в csv".
+    <br>
+    2. Вы увидите загруженный файл user.csv в котором будет список сохраненных фиксаторов со всей введенной информацией.
+    <br>
+    Шаг 5: Импортированиие. Есть возможность импортировать информацию о пассажирах на всех остановках.
+    <br>
+    1. Для этого нажмите кнопку "Импортировать в csv".
+    <br>
+    2. Вы увидите окно в котором будет можно выбрать и добавить файл user.csv со список фиксаторов со всей введенной информацией.
+`;
 
         var instructionContainer = document.createElement('div');
         instructionContainer.id = 'instructionContainer';
@@ -114,6 +165,8 @@ function CustomMenu(controlDiv, map) {
 
         var instructionText = document.createElement('p');
         instructionText.innerHTML = instructions;
+        instructionText.style.height = '400px';
+        instructionText.style.overflowY = 'scroll';
         instructionContainer.appendChild(instructionText);
 
         var closeButton = document.createElement('button');
@@ -126,20 +179,21 @@ function CustomMenu(controlDiv, map) {
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
     });
 }
-function showData(title) {
+function showData(id) {
     fetch(`http://localhost:8876/api/users/show`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            title: title,
+            id: id
         })
     })
         .then(response => {
             return response.json()
         })
         .then(data => {
+            console.log(data);
             const users = data.users;
             const popupElement = document.getElementById('show__popup');
             let list = ``;
@@ -151,10 +205,8 @@ function showData(title) {
                              <td>${user.password}</td>
                              <td class="text-center">
                                 <span class="cursor-pointer"
-                                      onclick="deleteUser('${user.id}', '${title}')"
-                                >X</span>
-                             </td>
-                         </tr>`;
+                                      onclick="deleteUser('${user.id}', '${id}')"
+                                      >x</span>`;
             }
             popupElement.style.display = 'block';
             popupElement.innerHTML = `
@@ -163,7 +215,6 @@ function showData(title) {
                       onclick="closePopup()"
                 >x</span>
             </div>
-            <h1>Остановка: ${title}</h1>
             <table border="3px">
                 <tr>
                     <th>ФИО</th>
@@ -203,7 +254,7 @@ const closePopup = () => {
     popupElement.style.display = 'none';
 }
 
-const deleteUser = (id, title) => {
+const deleteUser = (id, busStopId) => {
     fetch(`http://localhost:8876/api/users/${id}`, {
         method: 'DELETE',
         headers: {
@@ -214,7 +265,7 @@ const deleteUser = (id, title) => {
             return response.json()
         })
         .then(() => {
-            showData(title);
+            showData(busStopId);
         })
         .catch(error => console.error('Error loading data:', error));
 }
@@ -268,5 +319,8 @@ const exportUsersByCSV = () => {
     });
 }
 
+function closeContainer(container) {
+    document.getElementById(container).remove()
+}
 
 window.initMap = initMap;

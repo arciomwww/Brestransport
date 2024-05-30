@@ -20,10 +20,10 @@ interface UserRepositoryContract
     public function store(array $data): User;
 
     /**
-     * @param string $title
+     * @param int $id
      * @return Collection
      */
-    public function findByTitle(string $title): Collection;
+    public function findByStop(int $id): Collection;
 
     /**
      * @param int $id

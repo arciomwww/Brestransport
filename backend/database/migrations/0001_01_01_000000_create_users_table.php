@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('bus_stop_id')
+                ->index()
+                ->constrained('bus_stops')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('full_name');
             $table->string('phone_number');
             $table->string('email')->unique();

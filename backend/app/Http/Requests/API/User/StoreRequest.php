@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'bus_stop_id' => 'required|integer',
             'full_name' => 'required|string',
             'phone_number' => 'required|string|regex:/^\+?\d{10,}$/',
             'email' => 'required|email|unique:users,email',

@@ -17,7 +17,7 @@ class ShowUserAction implements ShowUserActionContract
     public function __invoke(array $data): array
     {
         try {
-            $users = $this->userRepository->findByTitle($data['title']);
+            $users = $this->userRepository->findByStop($data['id']);
             return [
                 'response' => [
                     'users' => $users

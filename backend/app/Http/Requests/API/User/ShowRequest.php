@@ -22,7 +22,7 @@ class ShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|exists:users,title',
+            'id' => 'required|integer|exists:bus_stops,id',
         ];
     }
 }

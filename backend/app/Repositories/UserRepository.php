@@ -20,7 +20,7 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
             ->create($data);
     }
 
-    public function findByTitle(string $title): Collection
+    public function findByStop(int $id): Collection
     {
         return $this->startConditions()
             ->select([
@@ -30,7 +30,7 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
                 'email',
                 'password',
             ])
-            ->where('title', '=', $title)
+            ->where('bus_stop_id', '=', $id)
             ->get();
     }
 
@@ -50,12 +50,14 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
     public function getAllForExcel(): Collection
     {
         return $this->startConditions()
+            ->join('bus_stops', 'users.bus_stop_id', '=', 'bus_stops.id')
             ->select([
-                'title',
-                'full_name',
-                'phone_number',
-                'email',
-                'password',
+                'bus_stops.title',
+                'bus_stops.next',
+                'users.full_name',
+                'users.phone_number',
+                'users.email',
+                'users.password',
             ])->get();
     }
 }
