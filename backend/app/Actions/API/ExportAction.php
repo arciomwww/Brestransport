@@ -7,11 +7,12 @@ use App\Contracts\Services\ExcelServiceContract;
 use Illuminate\Support\Facades\Log;
 use League\Csv\CannotInsertRecord;
 
-class ExportAction implements ExportActionContract
+readonly class ExportAction implements ExportActionContract
 {
     public function __construct(
         public ExcelServiceContract $service,
-    ) {}
+    ) {
+    }
 
     public function __invoke(): array
     {

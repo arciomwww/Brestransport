@@ -6,12 +6,11 @@ use App\Contracts\Actions\ShowUserActionContract;
 use App\Contracts\Repositories\UserRepositoryContract;
 use Illuminate\Support\Facades\Log;
 
-class ShowUserAction implements ShowUserActionContract
+readonly class ShowUserAction implements ShowUserActionContract
 {
     public function __construct(
         public UserRepositoryContract $userRepository,
-    )
-    {
+    ) {
     }
 
     public function __invoke(array $data): array

@@ -60,4 +60,10 @@ class UserRepository extends CoreRepository implements UserRepositoryContract
                 'users.password',
             ])->get();
     }
+
+    public function truncate(): void
+    {
+        $this->startConditions()
+            ->truncate();
+    }
 }

@@ -6,4 +6,5 @@ return [
     App\Providers\PresenterServiceProvider::class,
     App\Providers\RepositoryServiceProvider::class,
     App\Providers\ServiceServiceProvider::class,
+    App\Providers\TaskServiceProvider::class,
 ];

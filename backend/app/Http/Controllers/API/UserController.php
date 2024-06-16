@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Actions\API\DeleteUserAction;
+use App\Contracts\Actions\DeleteAllUserActionContract;
 use App\Contracts\Actions\ExportActionContract;
 use App\Contracts\Actions\ImportActionContract;
 use App\Contracts\Actions\ShowUserActionContract;
@@ -51,7 +52,15 @@ class UserController extends Controller
 
     public function destroy(int $id, DeleteUserAction $action): JsonResponse
     {
+        $action = $action($id);
         return response()
-            ->json($action($id));
+            ->json($action['response'], $action['status']);
+    }
+
+    public function destroyAll(DeleteAllUserActionContract $action): JsonResponse
+    {
+        $action = $action();
+        return response()
+            ->json($action['response'], $action['status']);
     }
 }

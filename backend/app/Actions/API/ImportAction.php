@@ -8,11 +8,12 @@ use App\Contracts\Services\ExcelServiceContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
-class ImportAction implements ImportActionContract
+readonly class ImportAction implements ImportActionContract
 {
     public function __construct(
         public ExcelServiceContract $service,
-    ) {}
+    ) {
+    }
 
     public function __invoke(array $data): array
     {

@@ -37,7 +37,11 @@ readonly class ExcelService implements ExcelServiceContract
 
         $users = [];
         foreach ($csv as $record) {
-            if (isset($record[2])) {
+            // gets length of record array
+            $recordLength = count($record);
+            // checks that record length greater than two
+            $recordLengthGreaterThanTwo = $recordLength > 2;
+            if ($recordLengthGreaterThanTwo) {
                 // gets bus stop
                 $findData = [
                     'title' => $record[0],

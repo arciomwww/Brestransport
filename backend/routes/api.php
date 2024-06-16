@@ -13,6 +13,7 @@ Route::controller(UserController::class)
         Route::post('/show', 'show');
         Route::post('/import', 'import');
         Route::post('/export', 'export');
+        Route::delete('/delete', 'destroyAll');
         Route::delete('/{user}', 'destroy');
     });
 

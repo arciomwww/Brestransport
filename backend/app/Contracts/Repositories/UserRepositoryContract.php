@@ -35,4 +35,9 @@ interface UserRepositoryContract
      * @return Collection
      */
     public function getAllForExcel(): Collection;
+
+    /**
+     * @return void
+     */
+    public function truncate(): void;
 }

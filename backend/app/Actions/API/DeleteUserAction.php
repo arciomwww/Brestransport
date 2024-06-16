@@ -6,12 +6,11 @@ use App\Contracts\Actions\DeleteUserActionContract;
 use App\Contracts\Repositories\UserRepositoryContract;
 use Illuminate\Support\Facades\Log;
 
-class DeleteUserAction implements DeleteUserActionContract
+readonly class DeleteUserAction implements DeleteUserActionContract
 {
     public function __construct(
         public UserRepositoryContract $userRepository,
-    )
-    {
+    ) {
     }
 
     public function __invoke(int $id): array

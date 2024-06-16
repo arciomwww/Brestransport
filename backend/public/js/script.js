@@ -74,23 +74,45 @@ function saveData(id) {
 }
 
 function CustomMenu(controlDiv, map) {
-    var exportButton = document.createElement('button');
+
+    const deleteAllButton = document.createElement('button');
+    deleteAllButton.innerHTML = 'Очистить пользователей';
+    deleteAllButton.onclick = () => {
+        fetch(`http://localhost:8876/api/users/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                console.log(response)
+                return response.text()
+            })
+            .then(data => {
+                console.log(data)
+            }).catch(error => {
+            console.error('Error saving data:', error)
+        });
+    }
+    controlDiv.appendChild(deleteAllButton);
+
+    const exportButton = document.createElement('button');
     exportButton.innerHTML = 'Экспортировать в CSV';
     controlDiv.appendChild(exportButton);
 
-    var importButton = document.createElement('button');
+    const importButton = document.createElement('button');
     importButton.innerHTML = 'Импортировать из CSV';
     controlDiv.appendChild(importButton);
 
-    var infoButton = document.createElement('button');
+    const infoButton = document.createElement('button');
     infoButton.innerHTML = 'Инструкции';
     controlDiv.appendChild(infoButton);
 
-    exportButton.addEventListener('click', function() {
+    exportButton.addEventListener('click', function () {
         exportUsersByCSV();
     });
 
-    importButton.addEventListener('click', function() {
+    importButton.addEventListener('click', function () {
         const instructions = "Import csv";
         const instructionContainer = document.createElement('div');
         instructionContainer.id = 'importContainer';
@@ -112,7 +134,7 @@ function CustomMenu(controlDiv, map) {
 
     });
 
-    infoButton.addEventListener('click', function() {
+    infoButton.addEventListener('click', function () {
         const instructions = `Шаг 1: Выбор остановки на карте
     <br>
     1. Вы перешли на страницу веб-приложения "БресТранспорт".
@@ -156,22 +178,22 @@ function CustomMenu(controlDiv, map) {
     2. Вы увидите окно в котором будет можно выбрать и добавить файл user.csv со список фиксаторов со всей введенной информацией.
 `;
 
-        var instructionContainer = document.createElement('div');
+        const instructionContainer = document.createElement('div');
         instructionContainer.id = 'instructionContainer';
 
-        var heading = document.createElement('h2');
+        const heading = document.createElement('h2');
         heading.innerHTML = 'Инструкции';
         instructionContainer.appendChild(heading);
 
-        var instructionText = document.createElement('p');
+        const instructionText = document.createElement('p');
         instructionText.innerHTML = instructions;
         instructionText.style.height = '400px';
         instructionText.style.overflowY = 'scroll';
         instructionContainer.appendChild(instructionText);
 
-        var closeButton = document.createElement('button');
+        const closeButton = document.createElement('button');
         closeButton.innerHTML = 'Закрыть';
-        closeButton.addEventListener('click', function() {
+        closeButton.addEventListener('click', function () {
             instructionContainer.parentNode.removeChild(instructionContainer);
         });
         instructionContainer.appendChild(closeButton);
@@ -179,6 +201,7 @@ function CustomMenu(controlDiv, map) {
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(instructionContainer);
     });
 }
+
 function showData(id) {
     fetch(`http://localhost:8876/api/users/show`, {
         method: 'POST',
